@@ -176,4 +176,6 @@ train_label = tf.keras.utils.to_categorical(train_label, 10)
 # 학습
 model.fit(train_data, train_label, epochs=10, batch_size=200)
 
-
+# 테스트
+test_label = tf.keras.utils.to_categorical(test_label, 10)
+model.evaluate(test_data, test_label)
