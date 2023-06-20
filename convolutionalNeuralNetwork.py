@@ -156,14 +156,15 @@ model.compile(loss="categorical_crossentropy",
               optimizer="adam",
               metrics=["accuracy"])
 
-# 학습 시키자
 """
+# 학습 시키려 하면 오류남
 model.fit(train_data, train_label, epochs=10, batch_size=200)
 # 오류 원인
 # 1. input dimension이 안맞음. 4차원이어야하는데 3차원을 넣었다고 오류생김. 채널정보를 따로 줘야함
 # 2. train_label 이 숫자로 되어있는걸 처리 안함
 """
 
+# 학습시키기 위해 모양 변경
 train_data = train_data.reshape(60000, 28, 28, 1)
 # train_data.shape[0] 을 통해 6만을 적어도 됨
 # 1을 통해 흑백이라고 정확히 명시. 28x28x1
@@ -172,6 +173,7 @@ train_label = tf.keras.utils.to_categorical(train_label, 10)
 # 정수형 레이블을 원-핫 인코딩 형식으로 변환
 # [0, 0, 0, 1, 0, 0, 0, 0, 0, 0] 이런식으로 표시되게 함
 
+# 학습
 model.fit(train_data, train_label, epochs=10, batch_size=200)
 
 
