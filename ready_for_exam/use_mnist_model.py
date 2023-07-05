@@ -12,7 +12,8 @@ labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 model = load_model('MNIST_CNN.hdf5')
 
 # 이미지 로드
-src = cv2.imread('img/9-0.png') # 이걸로하면 2개 틀림
+src = cv2.imread('img/number_image.png') # 20개중 4개틀림
+# src = cv2.imread('img/9-0.png') # 이걸로하면 2개 틀림
 # src = cv2.imread('img/0-9.png') # 2개 틀림
 # print(src.shape) # (212, 823, 3) # BGR 순서
 """
@@ -70,11 +71,12 @@ def my_threshold(grayImg):
 """
 rtn_val, binImg = cv2.threshold(gray, 100, 255, cv2.THRESH_OTSU)
 # binImg : 이진화한 이미지
-print('THRESH_OTSU : ', rtn_val)
+print('THRESH_OTSU : ', rtn_val)# 94.0
 
-# rtn_val, gray = cv2.threshold(gray, 94, 255, cv2.THRESH_TOZERO) # 교수님 사진
+rtn_val, gray = cv2.threshold(gray, 94, 255, cv2.THRESH_TOZERO) # 교수님 사진
+"""
 # rtn_val, gray = cv2.threshold(gray, 115, 255, cv2.THRESH_TOZERO) # 내 사진
-rtn_val, gray = cv2.threshold(gray, 82, 255, cv2.THRESH_TOZERO) # 아이패드로 쓴 숫자
+# rtn_val, gray = cv2.threshold(gray, 82, 255, cv2.THRESH_TOZERO) # 아이패드로 쓴 숫자
 # 획은 살리고 배경을 0으로 만듦
 # gray : mnist 데이터와 최대한 비슷하게 만든 이미지
 
@@ -82,6 +84,15 @@ rtn_val, gray = cv2.threshold(gray, 82, 255, cv2.THRESH_TOZERO) # 아이패드�
 # 연결된 요소 구하기
 # n_blob, labelImg, stats, centroid = cv2.connectedComponentsWithStats(binImg)
 n_blob, labelImg, stats, centroid = cv2.connectedComponentsWithStats(gray)
+"""
+
+# 팽창(Dilation) 연산을 적용하여 손글자를 두껍게 만듦
+kernel = np.ones((5, 5), np.uint8)
+dilated = cv2.dilate(gray, kernel, iterations=1)
+
+# 연결된 요소 구하기
+n_blob, labelImg, stats, centroid = cv2.connectedComponentsWithStats(dilated)
+
 
 gray_cp = gray.copy()
 
@@ -147,15 +158,15 @@ for i in range(1, n_blob): # 0번 블롭은 배경이기 때문에 안그린다
     pred_label = labels[np.argmax(pred)]
     print("예측값 : ", pred_label)
     # 이미지에 텍스트 표시
-    cv2.putText(gray_cp, str(pred_label), (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+    # cv2.putText(gray_cp, str(pred_label), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+    cv2.putText(src, str(pred_label), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
 # 결과 이미지 출력
-cv2.imshow('Image', gray_cp)
+for i in range(1, n_blob): # 0번 블롭은 배경이기 때문에 안그린다
+    x, y, w, h, area = stats[i] # 모든 stat에 대해 사각형 그리기
+    cv2.rectangle(src, (x, y, w, h), (255, 0, 255), thickness=2)
+cv2.imshow('Image', src)
+# cv2.imshow('Image', gray_cp)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
-
-
-
-
 
