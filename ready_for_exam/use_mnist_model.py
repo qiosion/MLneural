@@ -12,10 +12,8 @@ labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 model = load_model('MNIST_CNN.hdf5')
 
 # 이미지 로드
-src = cv2.imread('img/number_image.png') # 20개중 4개틀림
-# src = cv2.imread('img/9-0.png') # 이걸로하면 2개 틀림
-# src = cv2.imread('img/0-9.png') # 2개 틀림
-# print(src.shape) # (212, 823, 3) # BGR 순서
+src = cv2.imread('img/final_exam.png') # 20개중 1개틀림
+# src = cv2.imread('img/number_image.png') # 20개중 4개틀림
 """
 src[100, 100] = [0, 0, 255] # 그림의 100,100 좌표에 빨간점찍혀있는거 확인가능
 
@@ -71,12 +69,10 @@ def my_threshold(grayImg):
 """
 rtn_val, binImg = cv2.threshold(gray, 100, 255, cv2.THRESH_OTSU)
 # binImg : 이진화한 이미지
-print('THRESH_OTSU : ', rtn_val)# 94.0
+print('THRESH_OTSU : ', rtn_val) # 135
 
-rtn_val, gray = cv2.threshold(gray, 94, 255, cv2.THRESH_TOZERO) # 교수님 사진
+rtn_val, gray = cv2.threshold(gray, 135, 255, cv2.THRESH_TOZERO) # 교수님 사진
 """
-# rtn_val, gray = cv2.threshold(gray, 115, 255, cv2.THRESH_TOZERO) # 내 사진
-# rtn_val, gray = cv2.threshold(gray, 82, 255, cv2.THRESH_TOZERO) # 아이패드로 쓴 숫자
 # 획은 살리고 배경을 0으로 만듦
 # gray : mnist 데이터와 최대한 비슷하게 만든 이미지
 

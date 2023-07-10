@@ -29,11 +29,15 @@ print(test_data.shape) # (10000, 28, 28)
 # CNN 모델을 만들어보자
 model = Sequential()
 
-model.add(Conv2D(filters=32, kernel_size=(3, 3), # strides=(1, 1),
+model.add(Conv2D(filters=16, kernel_size=(3, 3), # strides=(1, 1),
                  activation="relu",
                  input_shape=(28, 28, 1)
                  ))
                  #padding="same"))
+
+model.add(Conv2D(filters=32, kernel_size=(3, 3), # strides=(1, 1),
+                 activation="relu"
+                 ))
 
 model.add(Conv2D(filters=64, kernel_size=(3, 3), # strides=(1, 1),
                  activation="relu"))
